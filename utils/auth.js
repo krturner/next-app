@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from 'react'
 import firebase from './firebase'
+import Router from 'next/router'
+
 const authContext = createContext()
 export function AuthProvider({ children }) {
   const auth = useProvideAuth()
@@ -30,6 +32,20 @@ function useProvideAuth() {
       .signInWithPopup(new firebase.auth.GithubAuthProvider())
       .then((response) => handleUser(response.user))
   }
+
+  const signinWithGoogle = (redirect) => {
+    setLoading(true)
+    return firebase
+      .auth()
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then((response) => {
+        handleUser(response.user)
+        if (redirect) {
+          Router.push(redirect)
+        }
+      })
+  }
+
   const signout = () => {
     return firebase
       .auth()
@@ -56,15 +72,3 @@ const formatUser = (user) => {
   }
 }
 
-const signinWithGoogle = (redirect) => {
-    setLoading(true)
-    return firebase
-      .auth()
-      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      .then((response) => {
-        handleUser(response.user)
-        if (redirect) {
-          Router.push(redirect)
-        }
-      })
-  }
