@@ -2,9 +2,9 @@ import { useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Box, FormControl, FormLabel, Input, Button } from '@chakra-ui/core'
 import Feedback from '../components/Feedback'
-import { useAuth } from '../../lib/auth'
+import { useAuth } from '../../utils/auth'
 import { createFeedback } from '../../lib/db'
-import { getAllFeedback, getAllSites } from '../../lib/db-admin'
+import { getAllSites } from '../../lib/db-admin'
 export async function getStaticProps(context) {
   const siteId = context.params.siteId
   const { feedback } = await getAllFeedback(siteId)
