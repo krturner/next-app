@@ -55,3 +55,16 @@ const formatUser = (user) => {
     provider: user.providerData[0].providerId,
   }
 }
+
+const signinWithGoogle = (redirect) => {
+    setLoading(true)
+    return firebase
+      .auth()
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then((response) => {
+        handleUser(response.user)
+        if (redirect) {
+          Router.push(redirect)
+        }
+      })
+  }
