@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, createContext } from 'react'
 import firebase from './firebase'
-import Router from 'next/router'
-
+import { createUser } from './db'
 const authContext = createContext()
 export function AuthProvider({ children }) {
   const auth = useProvideAuth()
@@ -12,40 +11,23 @@ export const useAuth = () => {
 }
 function useProvideAuth() {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
   const handleUser = (rawUser) => {
     if (rawUser) {
       const user = formatUser(rawUser)
-      setLoading(false)
+      createUser(user.uid, user)
       setUser(user)
       return user
     } else {
-      setLoading(false)
       setUser(false)
       return false
     }
   }
   const signinWithGitHub = () => {
-    setLoading(true)
     return firebase
       .auth()
       .signInWithPopup(new firebase.auth.GithubAuthProvider())
       .then((response) => handleUser(response.user))
   }
-
-  const signinWithGoogle = (redirect) => {
-    setLoading(true)
-    return firebase
-      .auth()
-      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      .then((response) => {
-        handleUser(response.user)
-        if (redirect) {
-          Router.push(redirect)
-        }
-      })
-  }
-
   const signout = () => {
     return firebase
       .auth()
@@ -58,9 +40,7 @@ function useProvideAuth() {
   }, [])
   return {
     user,
-    loading,
     signinWithGitHub,
-    signinWithGoogle,
     signout,
   }
 }
