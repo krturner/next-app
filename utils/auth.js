@@ -60,6 +60,7 @@ function useProvideAuth() {
     user,
     loading,
     signinWithGitHub,
+    signinWithGoogle,
     signout,
   }
 }
