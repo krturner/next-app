@@ -72,4 +72,3 @@ const formatUser = (user) => {
     provider: user.providerData[0].providerId,
   }
 }
-
